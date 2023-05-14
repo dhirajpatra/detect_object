@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Snow Detection ML Application</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('form').submit(function (event) {
+                event.preventDefault(); // prevent default form submission
+                var form_data = $(this).serialize(); // serialize form data
+                // console.log(form_data);
+                $('#result').html('Detection result will be show here!');
+                $('#submit-btn').click(function () {
+                    $(this).prop('disabled', true);
+                });
+                $.ajax({
+                    type: 'POST',
+                    url: '/detect',
+                    data: form_data,
+                    success: function (response) {
+                        console.log(response);
+                        var jsonStr = JSON.stringify(response, null, 2);
+                        $('#result').html('<pre>' + jsonStr + '</pre>'); // display response in HTML element
+                        $('#submit-btn').prop('disabled', false);
+                    },
+                    error: function (xhr, status, error) {
+                        console.log(error); // log error message
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+
+<body>
+    <h1>Snow Detection</h1>
+    <b>First RaspberryPi will take the image from camera, resize it and save into a folder.<br><br>From where our ML application can detect that and classify which type of snow condition it is.</b><br><br>
+    Refresh the page before new detection expected.
+    <br>
+    <br>
+    <!-- <form method="POST" action="/detect" enctype="multipart/form-data">
+        <input type="file" name="image" accept="image/*">
+        <input type="submit" value="Detect">
+    </form> -->
+    <form>
+        <input name="id" type="hidden" value="1">
+        <button id="submit-btn" type="submit">Click to Start Single Image Detection</button>
+    </form>
+    <br>
+    <br>
+    <div id="result" style="border: 1px solid red; padding: 10px;">Detection result will be show here!</div> <!-- HTML element to display the response -->
+
+    <table>
+        {% for row in data %}
+        <tr>
+            {% for item in row %}
+            <td>{{ item }}</td>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </table>
+    <br>
+    <div>
+        <h2><a href="/classify">Start Classifying Images</a></h2>
+    </div>
+
+</body>
+
+</html>

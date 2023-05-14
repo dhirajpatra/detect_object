@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>My Data</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+    
+        th,
+        td {
+            text-align: left;
+            padding: 8px;
+            border-bottom: 1px solid #ddd;
+        }
+    
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+    </style>
+</head>
+
+<body>
+    <h2>It will display latest 1000 records</h2>
+    <table>
+        <tr>
+            <td>ID</td>
+            <td>Model#</td>
+            <td>Category Name</td>
+            <td>Score</td>
+            <td>Shoot at</td>
+        </tr>
+        {% for row in data %}
+        <tr>
+            {% for item in row %}
+                {% if item == 'all_snow' or item == 'no_snow' or item == 'partial_snow' or item == 'ground_snow' %}
+                    <td><b>{{ item }}</b></td>
+                {% else %}
+                    <td>{{ item }}</td>
+                {%  endif %}
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+
+</html>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Object Detection API</title>
+</head>
+
+<body>
+    <h1>Object Detection API</h1>
+    <form action="/detect" method="post" enctype="multipart/form-data">
+        <input type="file" name="image">
+        <input type="submit" value="Detect">
+    </form>
+    <div id="results"></div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // When the form is submitted, call the `detect` function.
+            $("#detect").submit(function () {
+                var image = $("#image")[0].files[0];
+                detect(image);
+                return false;
+            });
+
+            // The `detect` function takes an image file as input and returns a JSON object with the results of the object detection.
+            function detect(image) {
+                // Create a new XMLHttpRequest object.
+                var xhr = new XMLHttpRequest();
+
+                // Set the request method to POST.
+                xhr.open("POST", "/detect");
+
+                // Set the request headers.
+                xhr.setRequestHeader("Content-Type", "multipart/form-data");
+
+                // Send the image file as the request body.
+                xhr.send(image);
+
+                // When the request is complete, call the `handleResponse` function.
+                xhr.onload = handleResponse;
+            }
+
+            // The `handleResponse` function handles the response from the server.
+            function handleResponse() {
+                if (xhr.status === 200) {
+                    // The request was successful.
+                    var results = JSON.parse(xhr.responseText);
+                    // Display the results in the `results` div.
+                    $("#results").html(results);
+                } else {
+                    // The request failed.
+                    alert("Error: " + xhr.status);
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>
